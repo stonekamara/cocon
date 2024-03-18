@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Marque Cocon en vectoriel : coquille ouverte, anneau, disque, point ambré.
+     Viewport 108x108 (norme adaptive icon), marque dans la zone sûre centrale. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Coquille externe bleu profond, ouverte en haut -->
+    <path
+        android:pathData="M 50.34,25.27 C 38.26,29.66 24.72,45.03 24.72,58.94 C 24.72,74.31 37.90,82.73 54,82.73 C 70.10,82.73 83.28,74.31 83.28,58.94 C 83.28,45.03 69.74,29.66 57.66,25.27"
+        android:strokeColor="#1E6FA8"
+        android:strokeWidth="7.32"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000"/>
+
+    <!-- Anneau intermédiaire bleu ciel -->
+    <path
+        android:pathData="M 51.80,35.88 C 44.48,38.79 35.70,48.32 35.70,57.85 C 35.70,67.38 43.75,73.22 54,73.22 C 64.25,73.22 72.30,67.38 72.30,57.85 C 72.30,48.32 63.52,38.79 56.20,35.88"
+        android:strokeColor="#4A9ED8"
+        android:strokeWidth="6.22"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000"/>
+
+    <!-- Disque interne bleu très clair -->
+    <path
+        android:pathData="M 41.56,56.75 a 12.44,13.54 0 1 0 24.88,0 a 12.44,13.54 0 1 0 -24.88,0 z"
+        android:fillColor="#D9EDFC"/>
+
+    <!-- Point central ambre -->
+    <path
+        android:pathData="M 49.24,56.75 a 4.76,4.76 0 1 0 9.52,0 a 4.76,4.76 0 1 0 -9.52,0 z"
+        android:fillColor="#E8A25C"/>
+</vector>

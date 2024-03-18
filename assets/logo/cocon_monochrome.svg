@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">Cocon — monochrome</title>
+  <desc>Variante tout blanc pour fond sombres et notifications.</desc>
+
+  <path d="M 236 128
+           C 170 152 96 236 96 312
+           C 96 396 168 442 256 442
+           C 344 442 416 396 416 312
+           C 416 236 342 152 276 128"
+        fill="none"
+        stroke="#FFFFFF"
+        stroke-width="40"
+        stroke-linecap="round"/>
+
+  <path d="M 244 186
+           C 204 202 156 254 156 306
+           C 156 358 200 390 256 390
+           C 312 390 356 358 356 306
+           C 356 254 308 202 268 186"
+        fill="none"
+        stroke="#FFFFFF"
+        stroke-width="26"
+        stroke-linecap="round"
+        opacity="0.85"/>
+
+  <circle cx="256" cy="300" r="24" fill="#FFFFFF"/>
+</svg>

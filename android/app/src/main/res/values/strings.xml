@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Cocon</string>
+    <string name="blocking_title">Cette app est bloquée</string>
+    <string name="blocking_message">Tu es dans ton cocon de concentration. Reviens vers ton objectif, une chose à la fois.</string>
+    <string name="blocking_countdown">%1$d:%2$s restantes</string>
+    <string name="blocking_home">Débloquer</string>
+    <string name="pin_enter_code">Devine le code à 3 chiffres…</string>
+    <string name="pin_wrong">Code incorrect. Le chrono continue…</string>
+    <string name="option_guess">Deviner le code</string>
+    <string name="option_brute">Brute force</string>
+    <string name="brute_trying">Essai : %1$d</string>
+    <string name="brute_found">Code trouvé !</string>
+    <string name="accessibility_service_description">Permet à Cocon de détecter quand tu ouvres une application bloquée pendant une session de concentration, pour afficher l\'écran de blocage.</string>
+</resources>

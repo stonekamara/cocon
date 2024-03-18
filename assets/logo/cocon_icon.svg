@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">Cocon — icône</title>
+  <desc>Version fond arrondi bleu ciel pour l'icône de lanceur.</desc>
+
+  <!-- Fond arrondi bleu ciel -->
+  <rect width="512" height="512" rx="116" fill="#EAF6FF"/>
+
+  <!-- Marque centrée, légèrement réduite -->
+  <g transform="translate(256 268) scale(0.86) translate(-256 -268)">
+    <path d="M 236 128
+             C 170 152 96 236 96 312
+             C 96 396 168 442 256 442
+             C 344 442 416 396 416 312
+             C 416 236 342 152 276 128"
+          fill="none"
+          stroke="#1E6FA8"
+          stroke-width="40"
+          stroke-linecap="round"/>
+
+    <path d="M 244 186
+             C 204 202 156 254 156 306
+             C 156 358 200 390 256 390
+             C 312 390 356 358 356 306
+             C 356 254 308 202 268 186"
+          fill="none"
+          stroke="#4A9ED8"
+          stroke-width="34"
+          stroke-linecap="round"/>
+
+    <ellipse cx="256" cy="300" rx="68" ry="74" fill="#D9EDFC"/>
+    <circle cx="256" cy="300" r="26" fill="#E8A25C"/>
+  </g>
+</svg>

@@ -27,18 +27,30 @@ class MainActivity : FlutterActivity() {
                         result.success(null)
                     }
 
+                    "isDeviceAdminEnabled" ->
+                        result.success(DeviceAdminManager.isActive(this))
+
+                    "activateDeviceAdmin" -> {
+                        DeviceAdminManager.ensureActive(this)
+                        result.success(null)
+                    }
+
                     "scheduleSessionEnd" -> {
                         val args = call.arguments as? Map<*, *>
                         val minutes = (args?.get("minutes") as? Number)?.toInt() ?: 25
                         @Suppress("UNCHECKED_CAST")
                         val packages =
                             (args?.get("packages") as? List<String>) ?: emptyList()
-                        SessionStateManager.armSession(this, minutes, packages)
-                        SessionAlarmScheduler.schedule(this, minutes)
-                        // Verrou de désinstallation actif pendant la session
-                        // (retiré automatiquement par clearSession à la fin).
-                        DeviceAdminManager.ensureActive(this)
-                        result.success(null)
+                        // Verrou anti-désinstallation : une session ne démarre
+                        // que si Cocon est administrateur actif, pour garantir
+                        // la protection à chaque session.
+                        if (!DeviceAdminManager.isActive(this)) {
+                            result.success(false)
+                        } else {
+                            SessionStateManager.armSession(this, minutes, packages)
+                            SessionAlarmScheduler.schedule(this, minutes)
+                            result.success(true)
+                        }
                     }
 
                     "cancelSessionEnd" -> {

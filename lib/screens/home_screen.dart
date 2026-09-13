@@ -40,7 +40,14 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       // PIN sur l'écran de blocage → la session locale se termine aussi).
       _refreshAccessibility();
       _syncSessionState();
+      _refreshDeviceAdminStatus();
     }
+  }
+
+  /// Met à jour le statut de l'admin après le dialogue système : dès qu'il
+  /// est actif, la bannière "admin requis" disparaît.
+  Future<void> _refreshDeviceAdminStatus() async {
+    await context.read<FocusProvider>().refreshDeviceAdminStatus();
   }
 
   /// Synchronise l'état local avec le natif : si la session native a été
@@ -103,6 +110,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                   if (!_accessibilityEnabled)
                     _AccessibilityBanner(
                         onEnabled: _refreshAccessibility),
+                  const SizedBox(height: 16),
+                  if (focus.deviceAdminRequired)
+                    _AdminBanner(onEnabled: _refreshDeviceAdminStatus),
                   const SizedBox(height: 16),
                   const _DurationPicker(),
                   const SizedBox(height: 24),
@@ -182,6 +192,54 @@ class _AccessibilityBanner extends StatelessWidget {
                 onEnabled();
               },
               child: const Text('Ouvrir les réglages'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Bannière d'admin d'appareil requis : une session ne démarre que si Cocon
+/// est administrateur (verrou anti-désinstallation garanti). Se masque dès
+/// que l'admin est activé.
+class _AdminBanner extends StatelessWidget {
+  const _AdminBanner({required this.onEnabled});
+
+  final VoidCallback onEnabled;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      color: CoconColors.amber.withValues(alpha: 0.15),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            const Icon(Icons.admin_panel_settings_outlined,
+                color: CoconColors.amber),
+            const SizedBox(height: 8),
+            const Text(
+              'Active Cocon comme administrateur pour lancer une session.',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontWeight: FontWeight.w600),
+            ),
+            const SizedBox(height: 4),
+            const Text(
+              'Pendant une session, Cocon ne pourra pas être désinstallé. '
+              'L\'admin sera retiré automatiquement à la fin du chrono.',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 12),
+            ),
+            const SizedBox(height: 12),
+            FilledButton(
+              onPressed: () async {
+                await NativeBridge.activateDeviceAdmin();
+                // L'utilisateur revient du dialogue système : on re-vérifie.
+                await Future<void>.delayed(const Duration(seconds: 2));
+                onEnabled();
+              },
+              child: const Text('Activer l\'admin'),
             ),
           ],
         ),

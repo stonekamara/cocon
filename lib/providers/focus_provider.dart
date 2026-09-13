@@ -41,6 +41,10 @@ class FocusProvider extends ChangeNotifier {
   int defaultMinutes = 25;
   List<FocusSession> history = <FocusSession>[];
 
+  /// Vrai si la dernière tentative de démarrage a été refusée parce que Cocon
+  /// n'est pas administrateur d'appareil (l'utilisateur doit l'activer).
+  bool deviceAdminRequired = false;
+
   bool get hasBlockedApps => blockedApps.isNotEmpty;
 
   // --- Contrôle de session -------------------------------------------------
@@ -65,7 +69,9 @@ class FocusProvider extends ChangeNotifier {
   }
 
   /// Démarre une session. Refusé si une session (même native, app relancée)
-  /// est déjà en cours. Retourne vrai si la session a bien démarré.
+  /// est déjà en cours, ou si Cocon n'est pas administrateur d'appareil
+  /// (verrou anti-désinstallation obligatoire avant chaque session).
+  /// Retourne vrai si la session a bien démarré.
   Future<bool> startSession(int minutes) async {
     if (phase != FocusPhase.idle) return false;
     // Garde-fou anti-double session : l'état natif fait foi.
@@ -73,15 +79,34 @@ class FocusProvider extends ChangeNotifier {
       await restoreFromNative();
       return false;
     }
+    // L'admin d'appareil est requis : il garantit la protection
+    // anti-désinstallation pendant toute la session.
+    final armed = await NativeBridge.scheduleSessionEnd(minutes, blockedApps);
+    if (!armed) {
+      deviceAdminRequired = true;
+      notifyListeners();
+      await NativeBridge.activateDeviceAdmin();
+      return false;
+    }
+    deviceAdminRequired = false;
     plannedMinutes = minutes;
     _secondsLeft = minutes * 60;
     phase = FocusPhase.running;
     _ticker?.cancel();
     _ticker = Timer.periodic(const Duration(seconds: 1), (_) => _tick());
-    await NativeBridge.scheduleSessionEnd(minutes, blockedApps);
     // Le PIN est généré côté natif : on le récupère pour l'afficher.
     await restoreFromNative();
     return true;
+  }
+
+  /// Re-vérifie l'état de l'admin après le dialogue système : dès qu'il est
+  /// actif, la bannière "admin requis" disparaît.
+  Future<void> refreshDeviceAdminStatus() async {
+    if (!deviceAdminRequired) return;
+    if (await NativeBridge.isDeviceAdminEnabled) {
+      deviceAdminRequired = false;
+      notifyListeners();
+    }
   }
 
   void pauseSession() {

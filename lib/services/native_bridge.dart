@@ -61,20 +61,46 @@ class NativeBridge {
     }
   }
 
+  /// Vrai si Cocon est administrateur d'appareil actif (verrou
+  /// anti-désinstallation pendant une session).
+  static Future<bool> get isDeviceAdminEnabled async {
+    if (!_supported) return false;
+    try {
+      return await _channel.invokeMethod<bool>('isDeviceAdminEnabled') ?? false;
+    } on PlatformException {
+      return false;
+    }
+  }
+
+  /// Ouvre le dialogue système d'activation de l'administrateur d'appareil.
+  static Future<void> activateDeviceAdmin() async {
+    if (!_supported) return;
+    try {
+      await _channel.invokeMethod('activateDeviceAdmin');
+    } on PlatformException {
+      // silencieux : l'utilisateur activera via les réglages
+    }
+  }
+
   /// Arme un timer natif exact (AlarmManager) pour la fin de session et
   /// transmet la liste des apps à bloquer au côté natif.
-  static Future<void> scheduleSessionEnd(
+  ///
+  /// Retourne faux si la session a été refusée côté natif : sur Android,
+  /// Cocon doit être administrateur actif pour démarrer une session
+  /// (protection anti-désinstallation garantie).
+  static Future<bool> scheduleSessionEnd(
     int durationMinutes,
     List<String> blockedPackages,
   ) async {
-    if (!_supported) return;
+    if (!_supported) return true;
     try {
-      await _channel.invokeMethod('scheduleSessionEnd', <String, Object?>{
-        'minutes': durationMinutes,
-        'packages': blockedPackages,
-      });
+      return await _channel.invokeMethod<bool>('scheduleSessionEnd', <String, Object?>{
+            'minutes': durationMinutes,
+            'packages': blockedPackages,
+          }) ??
+          true;
     } on PlatformException {
-      // silencieux
+      return true;
     }
   }
 

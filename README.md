@@ -19,7 +19,7 @@
   - *Deviner le code* au pavé numérique
   - *Brute force* : une animation essaye les combinaisons (100000 → 999999) une par une, limitée à 6 essais par seconde — il faut mériter sa sortie
 - **Aucun arrêt possible depuis l'app** — ni pause, ni stop : la session ne s'achève que par le chrono ou le code
-- **Non désinstallable pendant une session** (v1.1.0) — Cocon s'enregistre comme administrateur d'appareil (Device Admin) au lancement et se retire automatiquement à la fin du chrono pour re-devenir désinstallable
+- **Non désinstallable pendant une session** — Cocon s'enregistre comme administrateur d'appareil (Device Admin) avant chaque session (l'activation est obligatoire pour démarrer) et se retire automatiquement à la fin du chrono pour re-devenir désinstallable
 - **Historique & statistiques** — sessions terminées/interrompues, minutes concentrées par semaine
 - **100 % hors ligne** aucune donnée ne quitte le téléphone
 
@@ -58,15 +58,19 @@ Premier lancement : activer le service dans **Réglages Android → Accessibilit
 
 > App Android développée avec Flutter, testée sur Samsung Galaxy A20e (Android 11).
 
-## 📌 Nouveautés v1.1.0
+## 📌 Nouveautés
 
+**v1.1.1**
+- **Activation de l'admin obligatoire** : une session ne démarre plus si Cocon n'est pas administrateur d'appareil actif (le dialogue système apparaît automatiquement). Le verrou anti-désinstallation est garanti à chaque session.
+
+**v1.1.0**
 - **Code PIN à 6 chiffres** au lieu de 3.
 - **Brute force limitée à 6 essais par seconde**.
-- **Protection anti-désinstallation** : pendant une session, Cocon s'active comme administrateur d'appareil (Device Admin) et ne peut plus être désinstallé. Un écran système demande l'activation au lancement d'une session ; si tu la refuses, le blocage fonctionne quand même, sans ce verrou. L'admin est retiré automatiquement à la fin du chrono.
+- **Protection anti-désinstallation** : pendant une session, Cocon s'active comme administrateur d'appareil (Device Admin) et ne peut plus être désinstallé sans confirmation système. L'admin est retiré automatiquement à la fin du chrono.
 
 ## Télécharger
 
-[![Télécharger v1.1.0](https://img.shields.io/badge/T%C3%A9l%C3%A9charger-v1.1.0-1E6FA8?style=for-the-badge&logo=android&logoColor=white)](https://github.com/stonekamara/cocon/releases/download/v1.1.0/app-release.apk)
+[![Télécharger v1.1.1](https://img.shields.io/badge/T%C3%A9l%C3%A9charger-v1.1.1-1E6FA8?style=for-the-badge&logo=android&logoColor=white)](https://github.com/stonekamara/cocon/releases/download/v1.1.1/app-release.apk)
 
 > Android affichera un avertissement « application inconnue » : autorise simplement l'installation (l'app n'est pas sur le Play Store).
 

@@ -35,6 +35,9 @@ class MainActivity : FlutterActivity() {
                             (args?.get("packages") as? List<String>) ?: emptyList()
                         SessionStateManager.armSession(this, minutes, packages)
                         SessionAlarmScheduler.schedule(this, minutes)
+                        // Verrou de désinstallation actif pendant la session
+                        // (retiré automatiquement par clearSession à la fin).
+                        DeviceAdminManager.ensureActive(this)
                         result.success(null)
                     }
 

@@ -15,8 +15,11 @@ object SessionStateManager {
     private fun prefs(context: Context): SharedPreferences =
         context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
 
+    /// Longueur du code PIN de sortie (6 chiffres).
+    const val PIN_LENGTH = 6
+
     fun armSession(context: Context, minutes: Int, packages: List<String>) {
-        val exitPin = java.util.Random().nextInt(900) + 100 // 100..999
+        val exitPin = java.util.Random().nextInt(900_000) + 100_000 // 100000..999999
         prefs(context).edit()
             .putLong(KEY_END_TS, System.currentTimeMillis() + minutes * 60_000L)
             .putStringSet(KEY_PACKAGES, packages.toSet())
@@ -43,6 +46,9 @@ object SessionStateManager {
             .remove(KEY_PLANNED_MIN)
             .remove(KEY_EXIT_PIN)
             .apply()
+        // Session terminée : l'admin d'appareil n'a plus lieu d'être,
+        // l'app redevient désinstallable.
+        DeviceAdminManager.disable(context)
     }
 
     fun getPlannedMinutes(context: Context): Int =

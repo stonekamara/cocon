@@ -58,6 +58,19 @@
             android:name=".SessionEndReceiver"
             android:exported="false" />
 
+        <!-- Admin d'appareil : empêche la désinstallation pendant une session -->
+        <receiver
+            android:name=".CoconDeviceAdminReceiver"
+            android:exported="true"
+            android:permission="android.permission.BIND_DEVICE_ADMIN">
+            <meta-data
+                android:name="android.app.device_admin"
+                android:resource="@xml/device_admin" />
+            <intent-filter>
+                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
+            </intent-filter>
+        </receiver>
+
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data

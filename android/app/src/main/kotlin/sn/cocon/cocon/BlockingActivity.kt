@@ -13,12 +13,12 @@ import androidx.activity.OnBackPressedCallback
 /// Écran de blocage natif : s'affiche par-dessus l'app bloquée et persiste
 /// tant que la session est active.
 ///
-/// Le code PIN à 3 chiffres n'est **jamais affiché** : il est généré
+/// Le code PIN à 6 chiffres n'est **jamais affiché** : il est généré
 /// aléatoirement côté natif et n'en sort pas. Pour sortir avant la fin du
 /// chrono, deux options :
 /// - **Deviner** : saisie manuelle au pavé numérique.
-/// - **Brute force** : animation qui essaye toutes les combinaisons
-///   (100 → 999) une par une jusqu'à tomber sur le bon code.
+/// - **Brute force** : animation qui essaye les combinaisons (100000 →
+///   999999) une par une, sous une limite de 6 essais par seconde.
 class BlockingActivity : ComponentActivity() {
 
     private val handler = Handler(Looper.getMainLooper())
@@ -157,11 +157,11 @@ class BlockingActivity : ComponentActivity() {
 
     private fun onDigit(digit: String) {
         if (unlocking || bruteRunning) return
-        if (enteredPin.length >= 3) return
+        if (enteredPin.length >= SessionStateManager.PIN_LENGTH) return
         enteredPin += digit
         renderDots()
 
-        if (enteredPin.length == 3) {
+        if (enteredPin.length == SessionStateManager.PIN_LENGTH) {
             val expected = SessionStateManager.getExitPin(this)
             if (expected >= 0 && enteredPin == expected.toString()) {
                 unlocking = true
@@ -183,9 +183,9 @@ class BlockingActivity : ComponentActivity() {
 
     private fun renderDots() {
         val shown = buildString {
-            repeat(3) { i ->
+            repeat(SessionStateManager.PIN_LENGTH) { i ->
                 append(if (i < enteredPin.length) "●" else "○")
-                if (i < 2) append(' ')
+                if (i < SessionStateManager.PIN_LENGTH - 1) append(' ')
             }
         }
         pinDots.text = shown
@@ -231,7 +231,9 @@ class BlockingActivity : ComponentActivity() {
     }
 
     private companion object {
-        const val BRUTE_START = 100
-        const val BRUTE_STEP_MS = 45L
+        const val BRUTE_START = 100_000
+        /// Limite de brute force : nombre maximal d'essais par seconde.
+        const val BRUTE_LIMIT_PER_SECOND = 6
+        const val BRUTE_STEP_MS = 1000L / BRUTE_LIMIT_PER_SECOND
     }
 }
